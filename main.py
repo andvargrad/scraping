@@ -25,6 +25,16 @@ for j in numbers:
         numbers1.append(j)
 
 
+with open("numbers.txt", 'a') as f:
+    for number in numbers1:
+        f.write(number + "\n")
+    f.close()
+
+with open("email.txt", 'a') as f:
+    for email in emails:
+        f.write(email + "\n")
+    f.close()
+
 
 print(f'Телефоны: - {set(numbers1)}')
 print(f'Почта: - {emails}')
