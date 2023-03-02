@@ -26,7 +26,7 @@ for j in numbers:
 
 
 
-print(f'Телефоны: - {numbers1}')
+print(f'Телефоны: - {set(numbers1)}')
 print(f'Почта: - {emails}')
 
 
