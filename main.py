@@ -8,16 +8,17 @@ headers = {
     "User-Agent": ua.random
 }
 
+#   открываем файл и читаем его:
 with open('C:\\Users\\user\\Desktop\\python\\parser\\link.txt', 'r') as file:
     content = file.readlines()
     my_list = [line.strip() for line in content]
-work_list  = []
-# удаление дубликатов из списка
+
+work_list = []
+# удаление дубликатов ссылок
 my_list = list(set(my_list))
 my_list = list(filter(lambda x: x != '', my_list))
 for url in my_list:
-    list_url = url
-    work_list.append(url)
+    work_list.append(url) # добавляем все необходимое в переменную Work_list
 
 def extract_emails(soup):  # пытается найти все email в HTML коде страницы
     email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -26,7 +27,6 @@ def extract_emails(soup):  # пытается найти все email в HTML к
     return unique_emails
 
     # ищет номер
-
 
 def phone_numbers_extraction(soup):
     # пытается найти все номера телефонов в HTML коде странице
@@ -54,14 +54,16 @@ def phone_numbers_extraction(soup):
     return dell_new
 
 
-
-for url in my_list:
+for url in work_list:
     sent = requests.get(url, headers={"User-Agent": ua.random})
     soup = BeautifulSoup(sent.text, 'lxml')
 
     emails = extract_emails(soup)
     phones = phone_numbers_extraction(str(soup))
+    with open('output.txt', 'a') as f:
+        for phone in phones:
+            f.write(phone + '\n')
+
 
     print("URL:", url)
-    print("Emails found:", emails)
     print("Phone numbers found:", phones)
