@@ -3,6 +3,14 @@ import re
 import requests
 import fake_useragent
 
+'''
+    Эта программа умеет вытаскивать тел. номера и email адреса с сайтов которые ей показать в файле link.txt
+    сохраняет данные в два разных файла. emails, phones это сырые файлы с которыми нужно работать.
+    
+'''
+
+
+
 ua = fake_useragent.UserAgent()
 headers = {
     "User-Agent": ua.random
@@ -13,12 +21,14 @@ with open('C:\\Users\\user\\Desktop\\python\\parser\\link.txt', 'r') as file:
     content = file.readlines()
     my_list = [line.strip() for line in content]
 
+
 work_list = []
 # удаление дубликатов ссылок
 my_list = list(set(my_list))
 my_list = list(filter(lambda x: x != '', my_list))
 for url in my_list:
     work_list.append(url) # добавляем все необходимое в переменную Work_list
+
 
 def extract_emails(soup):  # пытается найти все email в HTML коде страницы
     email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -27,7 +37,6 @@ def extract_emails(soup):  # пытается найти все email в HTML к
     return unique_emails
 
     # ищет номер
-
 def phone_numbers_extraction(soup):
     # пытается найти все номера телефонов в HTML коде странице
     # регулярное выражение для поиска номеров телефонов
@@ -53,17 +62,20 @@ def phone_numbers_extraction(soup):
     # print(find_phones_pattern)   # проверочный принт
     return dell_new
 
-
+#   сама программа которая делает запрос и через две функции фильтрует номера и email сохраняя из в файлы
 for url in work_list:
     sent = requests.get(url, headers={"User-Agent": ua.random})
     soup = BeautifulSoup(sent.text, 'lxml')
 
     emails = extract_emails(soup)
     phones = phone_numbers_extraction(str(soup))
-    with open('output.txt', 'a') as f:
+    with open('numbers.txt', 'a') as f:
         for phone in phones:
             f.write(phone + '\n')
-
+    with open('emails.txt', 'a') as f:
+        for phone in emails:
+            f.write(phone + '\n')
 
     print("URL:", url)
+    print(f'email: {emails}')
     print("Phone numbers found:", phones)
